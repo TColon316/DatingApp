@@ -1,23 +1,20 @@
-using API.Data;
-using Microsoft.EntityFrameworkCore;
+using API;
+using API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-builder.Services.AddControllers();
-
-// Add DbContext
-builder.Services.AddDbContext<DataContext>(options => {
-  options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-// Adding CORS
-builder.Services.AddCors();
+builder.Services.AddApplicationServies(builder.Configuration);
+builder.Services.AddIdentityServices(builder.Configuration);
 
 var app = builder.Build();
 
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200", "https://localhost:4200"));
+
+// Cannot authorize without first authenticating. Place these BEFORE app.MapControllers();
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();
