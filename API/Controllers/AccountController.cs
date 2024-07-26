@@ -26,24 +26,26 @@ public class AccountController : BaseApiController
     // Check if user already exists in the User table
     if (await UserExists(registerDto.UserName)) return BadRequest("Username is already taken.");
 
-    using var hmac = new HMACSHA512();
+    return Ok();
 
-    var user = new AppUser
-    {
-      UserName = registerDto.UserName,
-      PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-      PasswordSalt = hmac.Key
-    };
+    // using var hmac = new HMACSHA512();
 
-    // Save newly created user
-    _context.AppUsers.Add(user);
-    await _context.SaveChangesAsync();
+    // var user = new AppUser
+    // {
+    //   UserName = registerDto.UserName,
+    //   PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
+    //   PasswordSalt = hmac.Key
+    // };
 
-    return new UserDto
-    {
-      Username = user.UserName,
-      Token = _tokenService.CreateToken(user),
-    };
+    // // Save newly created user
+    // _context.AppUsers.Add(user);
+    // await _context.SaveChangesAsync();
+
+    // return new UserDto
+    // {
+    //   Username = user.UserName,
+    //   Token = _tokenService.CreateToken(user),
+    // };
   }
 
   [HttpPost("login")]
