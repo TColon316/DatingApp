@@ -1,0 +1,73 @@
+Steps for creating new project
+Setting up the developer environment
+1.	Download .NET framework (Was using .NET 7). Do NOT use preview versions.
+2.	Download Node.js for running/testing things locally. Our browsers have javascript engines inside of them to run and execute javascript code, but we need it for our developer server.
+Setting up new project
+1.	Open CMD with Admin rights and navigate to main folder your project will be in
+2.	Create the folder structure with the folder name being the name of the app (Cmd: mkdir DatingApp)
+3.	In CMD, "cd" to that folder and create the sln file ("dotnet new sln")
+4.	Create the API folder structure next giving the folder a name with the last parameter ("dotnet new webapi -controllers -n API")
+5.	Add project to the solution (Cmd: dotnet sln add API)
+6.	Use the following command "code ." That is the word code with a space and then a period and if there is a sln file at that location it will open it in Visual Code.
+Setup Visual Studios Code to work with .NET
+1.	Use command "Reload Window" as a first troubleshooting step in case having any weird issues within VS Code to refresh everything. May need to type the '>' symbol and then "Reload Window" to get it to show in the search field
+2.	WIth a C# project, install the C# Dev Kit extension. This extension will make VS Code operate more similarly to how Visual Studios works. This should install the Dev Kit, and two other extensions: "C#" and ".NET Install Tool".
+3.	Extension - Material Icon Theme - Updates VS Code icons in Solution Explorer
+4.	Extension - NuGet Gallery - Allows for easier installation of NuGet packages (Uses a UI format to search for and install NuGet packages versus having to type them into CMD.
+5.	Extension - SQLite - Local SQL Database - It is actually a file so this is fine for local, small projects but not practical in real world projects
+6.	Make sure Auto Save is enabled under File menu option in VS Code
+LaunchSettings.Json file cleanup
+1.	Remove all profiles EXCEPT the "http" one. If not using Swagger, then remove "launchUrl" line
+2.	Change launchBrowser to false to disable opening a browser everytime starting app.
+3.	Changed "applicationUrl" setting to: ""applicationUrl": "http://localhost:5000;https://localhost:5001","
+4.	If when trying to navigate to the https site and it is not working or the browser does not trust the self signed certificate then can run the following command in the VS Code terminal to fix the issue: "dotnet dev-certs https --trust"
+5.	If previous still doesn't work then run the following command and then right after run the command in #4 again: "dotnet dev-certs https --clean"
+Program.cs, API.csproj and appsettings.Development.json cleanup
+1.	Program.cs - If not using Swagger, then can remove any code pertaining to Swagger.
+2.	API.csproj - Remove Swashbuck.AspNetCore reference since it also pertains to Swagger
+3.	appsettings.Development.json - Change Microsoft.AspNetCore setting from "Warning" to "Information"
+Adding Entity Framework to the project
+1.	Microsoft.EntityFrameworkCore.Sqlite - Install from Nuget window if using Nuget
+2.	Microsoft.EntityFrameworkCore.Design - Install from Nuget window
+3.	These extension installations should show in the API.csproj file as a PackageReference.
+4.	Run "dotnet tool install --global dotnet-ef --version (@Version# Here)" in the API folder. Check this url for the different versions: "https://www.nuget.org/packages/dotnet-ef/7.0.20"
+Creating an Angular application in the project
+1.	AngularCLI - Install Angular CLI (this will install globally) using the following into the terminal ("npm install -g @angular/cli@17") - Sidenote - "@17" just specifies which version of Angular to install
+2.	NPM (terminal command) comes from installing Node
+3.	NG (terminal command) comes from installing Angular
+4.	IMPORTANT NOTE: Make sure before entering the following commands that you "cd" back to the solution folder
+5.	Type "ng new client" to create the Angular project
+6.	Few questions will then be asked: Which stylesheet format would you like to use? Choosing CSS (default setting) for the class but would love to learn how to do SCSS
+7.	Do you want to enable Server-Side Rendering (SSR) and Static Site Generation (SSG/Prerendering)? Selecting No (which is default setting) 
+8.	Angular Language Service - Install this extension to get Angular functionality such as intellisense completion and closing of interpolation brackets ("{{ }}")
+9.	In Settings search for "Auto Closing Brackets" and change it in the dropdown from "languageDefined" to "Always"
+Dealing with "Blocked by CORS policy" error
+1.	This prevents against various security risks such as "Cross-site scripting" and "Data Theft" by ensuring that resources are only loaded from trusted origins as specified by our server.
+2.	builder.Services.AddCors() - Add it to the Program.cs file
+3.	app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200", "https://localhost:4200")); - Add that to the middleware section of the Program.cs file
+Adding Bootstrap and Font-Awesome
+1.	NPM packages MUST be installed in the Client project
+2.	NGX-Bootstrap - Run the following command in the Client project to install Bootstrap to the project ("npm install ngx-bootstrap@12 bootstrap font-awesome") - @18 if 12 is outdated
+3.	Add "node_modules/dist/css/bootstrap.min.css" in the angular.json file to introduce Bootstrap into the application
+4.	Add "node_modules/font-awesome/css/font-awesome.min.css" as well in the same location
+Setting up app to work on HTTPS
+1.	Please review the Angular class section (Section 3: Builidng a walking skeleton part 2 - Angular / Class #27 - Adding HTTPS to Angular using mkcert)
+2.	The website to check is called: github.com/FiloSottile/mkcert
+3.	Run the following command on the Client level to create a new SSL folder: "mkdir ssl"
+4.	"cd" into the newly created SSL folder and run the following command: "mkcert localhost"
+5.	In the angular.json file, add the following code to the "serve" section:
+ 
+7.	
+
+Git Hub
+1.	To initialize a new repository, type "git init" into the terminal in VS Code in the root location (In our case, the DatingApp folder level...not API or Client)
+2.	That will create a repository at the root level for Git
+3.	Create a dotnet gitignore file so that we can ignore a lot of files and code that is generated by the compiler and we do not need to save these changes (Only save the code that we have written)
+4.	Type "dotnet new gitignore" into the terminal at the same root level to create the ignore file. This will remove a lot of compiled code/files from being saved into Git
+5.	We will also want to exclude the appsettings.json file as it could (and probably will) contain sensitive information such as API keys/passwords/secret strings that we do not want available on a public GitHub space.
+6.	To do that, go into source control and find the appsettings.json file, right click on it and select "Add to .gitignore"
+ 
+8.	Here are some commands to enter into the command line interface:
+ 
+10.	You'll have to stage the changes, give the commit a name and then click the "Commit" button to commit changes. To send the changes to Git, after clicking Commit the button will change to "Publish Branch". Click to send the changes to Git.
+
