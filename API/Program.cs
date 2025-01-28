@@ -13,11 +13,17 @@ builder.Services.AddDbContext<DataContext>(options =>
   options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+// Add CORS to the app
+builder.Services.AddCors();
+
 var app = builder.Build();
 
 /***********************************************************/
 /***** All App code below is referred to as Middleware *****/
 /***********************************************************/
+// Add the CORS middleware
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200", "https://localhost:4200"));
+
 // Configure the HTTP request pipeline.
 app.MapControllers();
 
