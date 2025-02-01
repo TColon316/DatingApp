@@ -1,23 +1,32 @@
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
   <div class="container">
-    <a class="navbar-brand" href="#">Dating App</a>
+    <a class="navbar-brand" routerLink="/" routerLinkActive="active"
+      >Dating App</a
+    >
 
-    @if(accountService.currentUser()) {
     <ul class="navbar-nav me-auto mb-2 mb-md-0">
+      @if(accountService.currentUser()) {
       <li class="nav-item">
-        <a class="nav-link">Matches</a>
+        <a class="nav-link" routerLink="/members" routerLinkActive="active"
+          >Matches</a
+        >
       </li>
       <li class="nav-item">
-        <a class="nav-link">Lists</a>
+        <a class="nav-link" routerLink="/lists" routerLinkActive="active"
+          >Lists</a
+        >
       </li>
       <li class="nav-item">
-        <a class="nav-link">Messages</a>
+        <a class="nav-link" routerLink="/messages" routerLinkActive="active"
+          >Messages</a
+        >
       </li>
+      }
     </ul>
-    } @if(accountService.currentUser()) {
+    @if(accountService.currentUser()) {
     <div dropdown class="dropdown">
       <a dropdownToggle class="dropdown-toggle text-light text-decoration-none"
-        >Welcome User</a
+        >Welcome {{ accountService.currentUser()?.username | titlecase }}</a
       >
 
       <div *dropdownMenu class="dropdown-menu">
@@ -46,7 +55,7 @@
         placeholder="Password"
         type="password"
       />
-      <button class="btn btn-outline-success" type="submit">Login</button>
+      <button class="btn btn-success" type="submit">Login</button>
     </form>
     }
   </div>
