@@ -1,4 +1,5 @@
 using API.Extensions;
+using API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,9 @@ var app = builder.Build();
 /***********************************************************/
 /***** All App code below is referred to as Middleware *****/
 /***********************************************************/
+// Add our custom Exception Handling Middleware
+app.UseMiddleware<ExceptionMiddleware>();
+
 // Add the CORS middleware
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:4200", "https://localhost:4200"));
 
