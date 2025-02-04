@@ -17,36 +17,38 @@ namespace API.Controllers
             // Check if the UserName already exists in the database
             if (await UserExists(registerDto.Username)) return BadRequest("Username is already taken!");
 
-            // We will use HMACSHA512 to encrypt text or use a hashing algorithm to encrypt some text
-            using var hmac = new HMACSHA512();
+            return Ok();
 
-            // Create a new AppUser object and provide property values and create a new PasswordHash and PasswordSalt
-            var user = new AppUser()
-            {
-                Username = registerDto.Username.ToLower(),  // Ensure that the UserName is saved to lowercase in the database
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-                PasswordSalt = hmac.Key
-            };
+            // // We will use HMACSHA512 to encrypt text or use a hashing algorithm to encrypt some text
+            // using var hmac = new HMACSHA512();
 
-            // Add new user to the User table
-            context.Users.Add(user);
+            // // Create a new AppUser object and provide property values and create a new PasswordHash and PasswordSalt
+            // var user = new AppUser()
+            // {
+            //     Username = registerDto.Username.ToLower(),  // Ensure that the UserName is saved to lowercase in the database
+            //     PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
+            //     PasswordSalt = hmac.Key
+            // };
 
-            // Save changes to the database
-            await context.SaveChangesAsync();
+            // // Add new user to the User table
+            // context.Users.Add(user);
 
-            // Return user
-            return new UserDto
-            {
-                Username = user.Username,
-                Token = tokenService.CreateToken(user),
-            };
+            // // Save changes to the database
+            // await context.SaveChangesAsync();
+
+            // // Return user
+            // return new UserDto
+            // {
+            //     Username = user.Username,
+            //     Token = tokenService.CreateToken(user),
+            // };
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             // Look for existing user
-            var user = await context.Users.FirstOrDefaultAsync(x => x.Username == loginDto.Username.ToLower());
+            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.Username.ToLower());
 
             // If no user is found, then throw an Unauthorized exception
             if (user == null)
@@ -69,7 +71,7 @@ namespace API.Controllers
             // If this line of code is reached, then it means the login information was valid
             return new UserDto
             {
-                Username = user.Username,
+                Username = user.UserName,
                 Token = tokenService.CreateToken(user)
             };
         }
@@ -77,7 +79,7 @@ namespace API.Controllers
         // Method to check if the UserName already exists in the database
         private async Task<bool> UserExists(string username)
         {
-            return await context.Users.AnyAsync(x => x.Username.ToLower() == username.ToLower());
+            return await context.Users.AnyAsync(x => x.UserName.ToLower() == username.ToLower());
         }
     }
 }

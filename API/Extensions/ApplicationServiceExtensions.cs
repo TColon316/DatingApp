@@ -27,6 +27,10 @@ namespace API.Extensions
 
             // Add Services by specifying service lifetimes
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserRepository, UserRepository>();
+
+            // Add AutoMapper Profiles
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             return services;
         }
