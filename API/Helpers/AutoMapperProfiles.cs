@@ -15,6 +15,9 @@ namespace API.Helpers
                 .ForMember(dest => dest.PhotoUrl, orig => orig.MapFrom(source => source.Photos // Map the Photo to the owner
                 .FirstOrDefault(x => x.IsMain)!.Url)).ReverseMap();
 
+            //Member
+            CreateMap<MemberUpdateDto, AppUser>().ReverseMap();
+
             //Photos
             CreateMap<Photo, PhotoDto>().ReverseMap();
         }

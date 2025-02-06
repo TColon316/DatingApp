@@ -1,12 +1,13 @@
+import { AccountService } from './_services/account.service';
 import { Component, inject, OnInit } from '@angular/core';
 import { NavComponent } from './nav/nav.component';
-import { AccountService } from './_services/account.service';
+import { NgxSpinnerComponent } from 'ngx-spinner';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [NavComponent, RouterOutlet],
+  imports: [NavComponent, NgxSpinnerComponent, RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

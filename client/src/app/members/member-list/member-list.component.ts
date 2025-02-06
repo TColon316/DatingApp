@@ -11,18 +11,15 @@ import { MembersService } from '../../_services/members.service';
   styleUrl: './member-list.component.css',
 })
 export class MemberListComponent implements OnInit {
-  private memberService = inject(MembersService);
-
-  members: Member[] = [];
+  memberService = inject(MembersService);
 
   ngOnInit(): void {
-    this.loadMembers();
+    // Check if the Members array in the MemberService already contains Members. If not, then call the LoadMembers() method
+    if (this.memberService.members().length === 0) this.loadMembers();
   }
 
   // Get all members
   loadMembers() {
-    this.memberService.getMembers().subscribe({
-      next: (members) => (this.members = members),
-    });
+    this.memberService.getMembers();
   }
 }
