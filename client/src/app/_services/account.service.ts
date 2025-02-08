@@ -17,11 +17,7 @@ export class AccountService {
     return this.http.post<User>(`${this.baseUrl}account/login`, model).pipe(
       map((user) => {
         if (user) {
-          // Create a new Item in local storage called "user" and store the data that was returned
-          localStorage.setItem('user', JSON.stringify(user));
-
-          // Set the CurrentUser variable to the returned User
-          this.currentUser.set(user);
+          this.setCurrentUser(user);
         }
       })
     );
@@ -32,16 +28,20 @@ export class AccountService {
     return this.http.post<User>(`${this.baseUrl}account/register`, model).pipe(
       map((user) => {
         if (user) {
-          // Create a new Item in local storage called "user" and store the data that was returned
-          localStorage.setItem('user', JSON.stringify(user));
-
-          // Set the CurrentUser variable to the returned User
-          this.currentUser.set(user);
+          this.setCurrentUser(user);
         }
 
         return user;
       })
     );
+  }
+
+  setCurrentUser(user: User) {
+    // Create a new Item in local storage called "user" and store the data that was returned
+    localStorage.setItem('user', JSON.stringify(user));
+
+    // Set the CurrentUser variable to the returned User
+    this.currentUser.set(user);
   }
 
   // Resets CurrentUser info

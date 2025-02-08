@@ -48,7 +48,9 @@ namespace API.Controllers
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
             // Look for existing user
-            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == loginDto.Username.ToLower());
+            var user = await context.Users
+                .Include(x => x.Photos)
+                .FirstOrDefaultAsync(x => x.UserName == loginDto.Username.ToLower());
 
             // If no user is found, then throw an Unauthorized exception
             if (user == null)
@@ -72,7 +74,8 @@ namespace API.Controllers
             return new UserDto
             {
                 Username = user.UserName,
-                Token = tokenService.CreateToken(user)
+                Token = tokenService.CreateToken(user),
+                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
             };
         }
 

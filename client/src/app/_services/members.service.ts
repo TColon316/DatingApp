@@ -3,6 +3,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { Member } from '../_models/member';
 import { of, tap } from 'rxjs';
+import { Photo } from '../_models/photo';
 
 @Injectable({
   providedIn: 'root',
@@ -39,5 +40,43 @@ export class MembersService {
         );
       })
     );
+  }
+
+  // Sets the main photo while also updating the Members signal object here to include this updated change so that anywhere this
+  //  Members signal is referenced will also show the updated change
+  setMainPhoto(photo: Photo) {
+    return this.http
+      .put(`${this.baseUrl}users/set-main-photo/${photo.id}`, {})
+      .pipe(
+        tap(() => {
+          this.members.update((members) =>
+            members.map((m) => {
+              if (m.photos.includes(photo)) {
+                m.photoUrl = photo.url; // Updates the current Main photo
+              }
+
+              return m;
+            })
+          );
+        })
+      );
+  }
+
+  deletePhoto(photo: Photo) {
+    return this.http
+      .delete(`${this.baseUrl}users/delete-photo/${photo.id}`)
+      .pipe(
+        tap(() => {
+          this.members.update((members) =>
+            members.map((m) => {
+              if (m.photos.includes(photo)) {
+                m.photos = m.photos.filter((x) => x.id !== photo.id);
+              }
+
+              return m;
+            })
+          );
+        })
+      );
   }
 }

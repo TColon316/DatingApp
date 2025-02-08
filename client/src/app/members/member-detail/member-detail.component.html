@@ -29,7 +29,7 @@
       <div class="card-footer">
         <div class="btn-group d-flex">
           <button class="btn btn-primary">Like</button>
-          <button class="btn btn-success">Messages</button>
+          <button class="btn btn-success">Message</button>
         </div>
       </div>
     </div>
@@ -51,7 +51,12 @@
 
       <tab heading="Photos" #photoTab="tab">
         @if(photoTab.active) {
-        <gallery class="gallery" [items]="images"></gallery>
+        <!-- [itemAutosize] will place all pics side by side in the gallery (clears up empty black space around pictures) -->
+        <gallery
+          class="gallery"
+          [items]="images"
+          [itemAutosize]="true"
+        ></gallery>
         }
       </tab>
 

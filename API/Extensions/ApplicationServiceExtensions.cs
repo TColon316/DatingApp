@@ -1,5 +1,7 @@
 using System.Text;
 using API.Data;
+using API.DTOs;
+using API.Helpers;
 using API.Interfaces;
 using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -26,11 +28,15 @@ namespace API.Extensions
             services.AddCors();
 
             // Add Services by specifying service lifetimes
+            services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserRepository, UserRepository>();
 
             // Add AutoMapper Profiles
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            // Add Cloudinary Settings
+            services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
 
             return services;
         }
