@@ -105,6 +105,24 @@ export class PhotoEditorComponent implements OnInit {
 
       // Push this change up to the Parent Member signal object so the change will trickle back down to here, the Child component
       this.memberChange.emit(updatedMember);
+
+      // Set the Users first photo to main if it is their first time registering
+      if (photo.isMain) {
+        const user = this.accountService.currentUser();
+
+        if (user) {
+          user.photoUrl = photo.url;
+          this.accountService.setCurrentUser(user);
+        }
+
+        updatedMember.photoUrl = photo.url;
+        updatedMember.photos.forEach((p) => {
+          if (p.isMain) p.isMain = false;
+          if (p.id === photo.id) p.isMain = true;
+        });
+
+        this.memberChange.emit(updatedMember);
+      }
     };
   }
 }

@@ -38,7 +38,7 @@
         alt="User Main Image"
       />
       <a dropdownToggle class="dropdown-toggle text-light text-decoration-none"
-        >Welcome {{ accountService.currentUser()?.username | titlecase }}</a
+        >Welcome {{ accountService.currentUser()?.knownAs | titlecase }}</a
       >
 
       <div *dropdownMenu class="dropdown-menu">

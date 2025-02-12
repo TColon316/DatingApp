@@ -8,16 +8,22 @@ public class AutoMapperProfiles : Profile
 {
     public AutoMapperProfiles()
     {
-        //AppUser
+        // AppUser
         CreateMap<AppUser, MemberDto>()
             .ForMember(dest => dest.Age, orig => orig.MapFrom(source => source.DateOfBirth.CalculateAge()))
             .ForMember(dest => dest.PhotoUrl, orig => orig.MapFrom(source => source.Photos // Map the Photo to the owner
             .FirstOrDefault(x => x.IsMain)!.Url)).ReverseMap();
 
-        //Member
+        // Member
         CreateMap<MemberUpdateDto, AppUser>().ReverseMap();
 
-        //Photos
+        // Photos
         CreateMap<Photo, PhotoDto>().ReverseMap();
+
+        // RegisterDto
+        CreateMap<RegisterDto, AppUser>().ReverseMap();
+
+        // Convert a string to a DateOnly type
+        CreateMap<string, DateOnly>().ConvertUsing(s => DateOnly.Parse(s));
     }
 }

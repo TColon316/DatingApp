@@ -1,7 +1,7 @@
-using System.Security.Claims;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 using API.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -13,9 +13,14 @@ namespace API.Controllers
     public class UsersController(IMapper mapper, IPhotoService photoService, IUserRepository userRepository) : BaseApiController
     {
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
         {
-            var users = await userRepository.GetMembersAsync();
+            // Retrieve the currently logged in User's UserName
+            userParams.CurrentUsername = User.GetUsername();
+
+            var users = await userRepository.GetMembersAsync(userParams);
+
+            Response.AddPaginationHeader(users);
 
             return Ok(users);
         }
@@ -79,6 +84,10 @@ namespace API.Controllers
                 Url = result.SecureUrl.AbsoluteUri,
                 PublicId = result.PublicId
             };
+
+            // Make the Users first uploaded photo their main photo
+            if (user.Photos.Count == 0)
+                photo.IsMain = true;
 
             // Add the new Photo to the Photo table
             user.Photos.Add(photo);
